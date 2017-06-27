@@ -1,0 +1,4 @@
+FROM openjdk:8-jre-alpine
+RUN apk add --no-cache curl bash python && curl http://mirror.netinch.com/pub/apache/storm/apache-storm-1.1.0/apache-storm-1.1.0.tar.gz | tar -xvz -C /var/opt
+WORKDIR /var/opt/apache-storm-1.1.0
+CMD ["sh", "-c", "./bin/storm nimbus"]

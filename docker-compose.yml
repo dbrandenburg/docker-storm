@@ -1,0 +1,21 @@
+version: '2'
+services:
+  nimbus:
+    build: ./nimbus
+    ports:
+     - "3773"
+     - "3772"
+     - "6627"
+  supervisor:
+    build: ./supervisor
+    ports:
+     - "8000:8000"
+    depends_on:
+     - "nimbus"
+  ui:
+    build: ./ui
+    ports:
+     - "8080:8080"
+    depends_on:
+     - "nimbus"
+     - "supervisor"
