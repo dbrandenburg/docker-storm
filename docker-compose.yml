@@ -1,21 +1,41 @@
 version: '2'
 services:
+  zookeeper:
+    image: zookeeper
+    expose:
+      - "2181"
+  storm-base:
+    build:
+      context: ./storm-base
+      dockerfile: Dockerfile.openJDK
+    image: storm-base
+    links:
+      - "zookeeper"
   nimbus:
     build: ./nimbus
+    image: storm-nimbus
     ports:
-     - "3773"
-     - "3772"
      - "6627"
+    depends_on:
+     - "storm-base"
+    links:
+      - "zookeeper"
   supervisor:
     build: ./supervisor
+    image: storm-supervisor
     ports:
      - "8000:8000"
     depends_on:
      - "nimbus"
+    links:
+      - "zookeeper"
   ui:
     build: ./ui
+    image: storm-ui
     ports:
      - "8080:8080"
     depends_on:
      - "nimbus"
      - "supervisor"
+    links:
+      - "zookeeper"
