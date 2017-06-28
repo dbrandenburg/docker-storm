@@ -2,8 +2,8 @@ version: '2'
 services:
   zookeeper:
     image: zookeeper
-    expose:
-      - "2181"
+    ports:
+      - "2181:2181"
   storm-base:
     build:
       context: ./storm-base
@@ -15,9 +15,8 @@ services:
     build: ./nimbus
     image: storm-nimbus
     ports:
-     - "3772"
-     - "3773"
-     - "6627"
+     - "3772-3774:3772-3774"
+     - "6627:6627"
     depends_on:
      - "storm-base"
     links:
@@ -27,6 +26,8 @@ services:
     image: storm-supervisor
     ports:
      - "8000:8000"
+     - "6700-6703:6700-6703"
+
     depends_on:
      - "nimbus"
     links:
