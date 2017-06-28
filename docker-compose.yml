@@ -15,6 +15,8 @@ services:
     build: ./nimbus
     image: storm-nimbus
     ports:
+     - "3772"
+     - "3773"
      - "6627"
     depends_on:
      - "storm-base"
