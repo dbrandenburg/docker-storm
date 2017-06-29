@@ -9,6 +9,6 @@ $ docker-compose up
 ```
 The Storm ui will be available on http://localhsot:8080. To deploy a topology run the following according to your target directory
 ```sh
-$ run --rm  storm-base ./bin/storm jar -c nimbus.host=nimbus /var/opt/mytopologies/storm-starter-1.1.0.jar org.apache.storm.starter.WordCountTopology WordCount
+$ docker-compose run --rm  storm-base ./bin/storm jar -c nimbus.host=nimbus /var/opt/mytopologies/storm-starter-1.1.0.jar org.apache.storm.starter.WordCountTopology WordCount
 ```
 
