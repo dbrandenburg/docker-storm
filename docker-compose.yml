@@ -2,40 +2,38 @@ version: '2'
 services:
   zookeeper:
     image: zookeeper
-    ports:
-      - "2181:2181"
   storm-base:
     build:
-      context: ./storm-base
+      context: .
       dockerfile: Dockerfile.openJDK
     image: storm-base
+    volumes:
+      - /opt:/var/opt/mytopologies
   nimbus:
-    build: ./nimbus
-    image: storm-nimbus
+    image: storm-base
+    container_name: nimbus
+    command: ./bin/storm nimbus -c nimbus.seeds='["nimbus"]' -c storm.zookeeper.servers='["zookeeper"]'
     ports:
-      - "3772-3774:3772-3774"
       - "6627:6627"
     depends_on:
       - "storm-base"
     links:
       - zookeeper:zookeeper
   supervisor:
-    build: ./supervisor
-    image: storm-supervisor
+    image: storm-base
+    container_name: supervisor
+    command: ./bin/storm supervisor -c nimbus.seeds='["nimbus"]' -c storm.zookeeper.servers='["zookeeper"]'
     ports:
       - "8000:8000"
-      - "6700:6700"
-      - "6701:6701"
-      - "6702:6702"
-      - "6703:6703"
     depends_on:
-      - "storm-base"
+      - "nimbus"
     links:
       - zookeeper:zookeeper
       - nimbus:nimbus
   ui:
-    build: ./ui
-    image: storm-ui
+    image: storm-base
+    container_name: ui
+    command: ./bin/storm ui -c nimbus.seeds='["nimbus"]' -c storm.zookeeper.servers='["zookeeper"]'
     ports:
      - "8080:8080"
     depends_on:
