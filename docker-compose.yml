@@ -9,36 +9,37 @@ services:
       context: ./storm-base
       dockerfile: Dockerfile.openJDK
     image: storm-base
-    links:
-      - "zookeeper"
   nimbus:
     build: ./nimbus
     image: storm-nimbus
     ports:
-     - "3772-3774:3772-3774"
-     - "6627:6627"
+      - "3772-3774:3772-3774"
+      - "6627:6627"
     depends_on:
-     - "storm-base"
+      - "storm-base"
     links:
-      - "zookeeper"
+      - zookeeper:zookeeper
   supervisor:
     build: ./supervisor
     image: storm-supervisor
     ports:
-     - "8000:8000"
-     - "6700-6703:6700-6703"
-
+      - "8000:8000"
+      - "6700:6700"
+      - "6701:6701"
+      - "6702:6702"
+      - "6703:6703"
     depends_on:
-     - "nimbus"
+      - "storm-base"
     links:
-      - "zookeeper"
+      - zookeeper:zookeeper
+      - nimbus:nimbus
   ui:
     build: ./ui
     image: storm-ui
     ports:
      - "8080:8080"
     depends_on:
-     - "nimbus"
-     - "supervisor"
+      - "storm-base"
     links:
-      - "zookeeper"
+      - zookeeper:zookeeper
+      - nimbus:nimbus
