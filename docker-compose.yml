@@ -13,20 +13,16 @@ services:
     image: storm-base
     container_name: nimbus
     command: ./bin/storm nimbus -c nimbus.seeds='["nimbus"]' -c storm.zookeeper.servers='["zookeeper"]'
-    ports:
-      - "6627:6627"
     depends_on:
-      - "storm-base"
+      - storm-base
     links:
       - zookeeper:zookeeper
   supervisor:
     image: storm-base
     container_name: supervisor
     command: ./bin/storm supervisor -c nimbus.seeds='["nimbus"]' -c storm.zookeeper.servers='["zookeeper"]'
-    ports:
-      - "8000:8000"
     depends_on:
-      - "nimbus"
+      - nimbus
     links:
       - zookeeper:zookeeper
       - nimbus:nimbus
@@ -34,10 +30,8 @@ services:
     image: storm-base
     container_name: ui
     command: ./bin/storm ui -c nimbus.seeds='["nimbus"]' -c storm.zookeeper.servers='["zookeeper"]'
-    ports:
-     - "8080:8080"
     depends_on:
-      - "storm-base"
+      - storm-base
     links:
       - zookeeper:zookeeper
       - nimbus:nimbus
