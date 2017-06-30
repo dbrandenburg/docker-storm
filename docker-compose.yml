@@ -30,6 +30,8 @@ services:
     image: storm-base
     container_name: ui
     command: ./bin/storm ui -c nimbus.seeds='["nimbus"]' -c storm.zookeeper.servers='["zookeeper"]'
+    ports:
+      - "8080:8080"
     depends_on:
       - storm-base
     links:
