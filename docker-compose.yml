@@ -11,7 +11,7 @@ services:
       - /tmp:/var/opt/mytopologies
   storm-nimbus:
     image: storm-base
-    command: ./bin/storm nimbus -c nimbus.seeds='["storm-nimbus"]' -c storm.zookeeper.servers='["storm-zookeeper"]'
+    command: ./bin/storm nimbus -c storm.zookeeper.servers='["storm-zookeeper"]'
     depends_on:
       - storm-base
   storm-supervisor:
