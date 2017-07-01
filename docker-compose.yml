@@ -1,6 +1,6 @@
-version: '2'
+version: '3'
 services:
-  zookeeper:
+  storm-zookeeper:
     image: zookeeper
   storm-base:
     build:
@@ -9,31 +9,22 @@ services:
     image: storm-base
     volumes:
       - /tmp:/var/opt/mytopologies
-  nimbus:
+  storm-nimbus:
     image: storm-base
-    container_name: nimbus
-    command: ./bin/storm nimbus -c nimbus.seeds='["nimbus"]' -c storm.zookeeper.servers='["zookeeper"]'
+    command: ./bin/storm nimbus -c nimbus.seeds='["storm-nimbus"]' -c storm.zookeeper.servers='["storm-zookeeper"]'
     depends_on:
       - storm-base
-    links:
-      - zookeeper:zookeeper
-  supervisor:
+  storm-supervisor:
     image: storm-base
-    container_name: supervisor
-    command: ./bin/storm supervisor -c nimbus.seeds='["nimbus"]' -c storm.zookeeper.servers='["zookeeper"]'
+    command: ./bin/storm supervisor -c nimbus.seeds='["storm-nimbus"]' -c storm.zookeeper.servers='["storm-zookeeper"]'
     depends_on:
-      - nimbus
-    links:
-      - zookeeper:zookeeper
-      - nimbus:nimbus
-  ui:
+      - storm-nimbus
+  storm-ui:
     image: storm-base
-    container_name: ui
-    command: ./bin/storm ui -c nimbus.seeds='["nimbus"]' -c storm.zookeeper.servers='["zookeeper"]'
+    command: ./bin/storm ui -c nimbus.seeds='["storm-nimbus"]' -c storm.zookeeper.servers='["storm-zookeeper"]'
     ports:
       - "8080:8080"
     depends_on:
       - storm-base
-    links:
-      - zookeeper:zookeeper
-      - nimbus:nimbus
+      - storm-zookeeper
+      - storm-nimbus
